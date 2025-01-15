@@ -3,6 +3,8 @@ import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 
+import { connectDB } from "./config/connectDb.js";
+
 dotenv.config();
 connectDB();
 
@@ -20,5 +22,5 @@ app.get("/", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log("Server is running on port 3000");
+  console.log("Server is running on port ${PORT}");
 });
