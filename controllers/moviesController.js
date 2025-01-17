@@ -1,0 +1,49 @@
+import Movie from "../models/MovieModel.js";
+
+export const getAllMovies = async (req, res) => {
+  try {
+    const movies = await Movie.find();
+    res.json(movies);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const getSortedMovies = async (req, res) => {
+  const { sortBy } = req.query;
+  const sortFields = ["name", "rating", "releaseDate", "duration"];
+  if (!sortFields.includes(sortBy)) {
+    return res.status(400).json({ message: "Invalid sort field" });
+  }
+  const movies = await Movie.find().sort({ [sortBy]: 1 });
+  res.json(movies);
+};
+
+export async function getImdbTopMovies(req, res) {
+  try {
+    const response = await fetch(
+      "https://raw.githubusercontent.com/theapache64/top250/master/top250_min.json"
+    );
+
+    const data = await response.json();
+
+    res.json({ success: true, content: data });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+}
+
+export const searchMovies = asyncHandler(async (req, res) => {
+  const { searchTerm } = req.query;
+
+  if (!query) {
+    return res.status(400).json({ message: "Query parameter is required" });
+  }
+  const movies = await Movie.find({
+    $or: [
+      { name: { $regex: query, $options: "i" } },
+      { description: { $regex: query, $options: "i" } },
+    ],
+  });
+  res.json(movies);
+});
