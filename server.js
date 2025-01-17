@@ -5,6 +5,10 @@ import cookieParser from "cookie-parser";
 
 import { connectDB } from "./config/connectDb.js";
 
+import moviesRoutes from "./routes/moviesRoutes.js";
+import { getSortedMovies } from "./controllers/moviesController.js";
+import adminRoutes from "./routes/adminRoutes.js";
+
 dotenv.config();
 connectDB();
 
@@ -17,10 +21,9 @@ app.use(cookieParser());
 
 const PORT = process.env.PORT;
 
-app.get("/", (req, res) => {
-  res.send("Hello zeshan!");
-});
+app.use("/movies", moviesRoutes);
+app.use("/admin", adminRoutess);
 
 app.listen(PORT, () => {
-  console.log("Server is running on port ${PORT}");
+  console.log(`Server is running on port ${PORT}`);
 });
