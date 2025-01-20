@@ -47,3 +47,27 @@ export const searchMovies = asyncHandler(async (req, res) => {
   });
   res.json(movies);
 });
+
+export const addMovie = asyncHandler(async (req, res) => {
+  const { name, description, rating, releaseDate, duration, imageUrl } =
+    req.body;
+
+  if (!name || !description || !rating || !releaseDate || !duration) {
+    return res.status(400).json({ message: "Missing required fields" });
+  }
+
+  const movie = new Movie({
+    name,
+    description,
+    rating,
+    releaseDate,
+    duration,
+  });
+
+  try {
+    const savedMovie = await movie.save();
+    res.json(savedMovie);
+  } catch (error) {
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
