@@ -71,3 +71,18 @@ export const addMovie = asyncHandler(async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
+
+export const editMovie = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const updates = req.body;
+
+  const updatedMovie = await Movie.findByIdAndUpdate(id, updates, {
+    new: true,
+  });
+
+  if (!updatedMovie) {
+    return res.status(404).json({ message: "Movie not found" });
+  }
+
+  res.json(updatedMovie);
+});
