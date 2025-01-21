@@ -1,3 +1,4 @@
+import asyncHandler from "../middleware/asyncHandler.js";
 import Movie from "../models/MovieModel.js";
 
 export const getAllMovies = async (req, res) => {
@@ -55,20 +56,27 @@ export const addMovie = asyncHandler(async (req, res) => {
   if (!name || !description || !rating || !releaseDate || !duration) {
     return res.status(400).json({ message: "Missing required fields" });
   }
+  const date = new Date(releaseDate);
+  const formattedDate = new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate()
+  );
 
   const movie = new Movie({
     name,
     description,
-    rating,
-    releaseDate,
-    duration,
+    rating: parseFloat(rating),
+    releaseDate: formattedDate,
+    duration: parseInt(duration, 10),
+    imageUrl: imageUrl || "",
   });
 
   try {
     const savedMovie = await movie.save();
     res.json(savedMovie);
   } catch (error) {
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ message: error });
   }
 });
 
