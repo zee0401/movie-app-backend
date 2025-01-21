@@ -22,7 +22,7 @@ app.use(cookieParser());
 const PORT = process.env.PORT;
 
 app.use("/movies", moviesRoutes);
-app.use("/admin", adminRoutess);
+app.use("/admin", adminRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

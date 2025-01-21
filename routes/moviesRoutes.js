@@ -4,6 +4,7 @@ import {
   getImdbTopMovies,
   addMovie,
   editMovie,
+  deleteMovie,
 } from "../controllers/moviesController.js";
 import { getAllMovies } from "../controllers/moviesController.js";
 import asyncHandler from "../middleware/asyncHandler.js";
@@ -15,5 +16,6 @@ router.get("/sorted", getImdbTopMovies);
 router.get("/search", getSortedMovies);
 router.post("/create-movie", addMovie);
 router.put("/edit-movie", editMovie);
+router.delete("/delete-movie", deleteMovie);
 
 export default router;
