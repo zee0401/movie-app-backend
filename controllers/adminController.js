@@ -1,11 +1,12 @@
 import Admin from "../models/adminModel.js";
 import asyncHandler from "../middleware/asyncHandler.js";
 import generateToken from "../utils/jwt.js";
+import bcrypt from "bcryptjs";
 
 export const createAdmin = asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
+  const { name, email, password } = req.body;
 
-  if (!username || !email || !password) {
+  if (!name || !email || !password) {
     throw new Error("Please fill all the fields");
   }
 
@@ -19,14 +20,18 @@ export const createAdmin = asyncHandler(async (req, res) => {
   const hashedPassword = await bcrypt.hash(password, salt);
 
   try {
-    const newAdmin = await Admin.create({ username, email, hashedPassword });
+    const newAdmin = await Admin.create({
+      name,
+      email,
+      password: hashedPassword,
+    });
     generateToken(res, newAdmin._id);
     await newAdmin.save();
 
     res.status(201).json({
       _id: newAdmin._id,
       email: newAdmin.email,
-      username: newAdmin.username,
+      username: newAdmin.name,
     });
   } catch (error) {
     res.status(400).json({ error: error.message });
