@@ -58,9 +58,10 @@ export const loginAdmin = asyncHandler(async (req, res) => {
   if (isPasswordCorrect) {
     generateToken(res, admin._id);
     res.status(200).json({
-      _id: admin._id,
-      email: admin.email,
-      username: admin.username,
+      adminDetails: {
+        _id: admin._id,
+        email: admin.email,
+      },
     });
   } else {
     res.status(401).json({ error: "Incorrect password" });
