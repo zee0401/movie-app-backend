@@ -2,6 +2,7 @@ import Admin from "../models/adminModel.js";
 import asyncHandler from "../middleware/asyncHandler.js";
 import generateToken from "../utils/jwt.js";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 export const createAdmin = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
@@ -65,5 +66,34 @@ export const loginAdmin = asyncHandler(async (req, res) => {
     });
   } else {
     res.status(401).json({ error: "Incorrect password" });
+  }
+});
+
+export const verifyAdmin = asyncHandler(async (req, res) => {
+  const token = req.cookies.jwt;
+
+  if (!token) {
+    return res.status(401).json({ message: "No token found" });
+  }
+
+  try {
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+
+    if (!decodedToken) {
+      return res.status(401).json({ message: "Invalid token" });
+    }
+
+    console.log("decodedToken", decodedToken);
+
+    const admin = await Admin.findOne(decodedToken.admin);
+
+    if (!admin) {
+      return res.status(404).json({ message: "Admin not found" });
+    }
+
+    res.status(200).json({ message: "Token verified successfully", admin });
+  } catch (error) {
+    console.error(error);
+    return res.status(401).json({ message: "Invalid token or token expired" });
   }
 });
