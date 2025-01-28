@@ -1,14 +1,16 @@
 import asyncHandler from "../middleware/asyncHandler.js";
 import Movie from "../models/MovieModel.js";
 
-export const getAllMovies = async (req, res) => {
+export const getAllMovies = asyncHandler(async (req, res) => {
   try {
     const movies = await Movie.find();
-    res.json(movies);
+
+    const sortedMovies = movies.sort((a, b) => b.rating - a.rating);
+    res.status(200).json(sortedMovies);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ message: "Error Fetching movies" });
   }
-};
+});
 
 export const getSortedMovies = async (req, res) => {
   const { sortBy } = req.query;
