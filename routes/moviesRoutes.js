@@ -5,12 +5,15 @@ import {
   addMovie,
   editMovie,
   deleteMovie,
+  getMovieById,
 } from "../controllers/moviesController.js";
 import { getAllMovies } from "../controllers/moviesController.js";
 import asyncHandler from "../middleware/asyncHandler.js";
+
 const router = express.Router();
 
 router.get("/all-movies", getAllMovies);
+router.get("/:id", getMovieById);
 router.get("/sorted", asyncHandler(getSortedMovies));
 router.get("/sorted", getImdbTopMovies);
 router.get("/search", getSortedMovies);
