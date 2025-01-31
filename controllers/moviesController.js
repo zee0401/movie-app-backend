@@ -108,3 +108,15 @@ export const deleteMovie = asyncHandler(async (req, res) => {
 
   res.json({ message: "Movie deleted successfully" });
 });
+
+export const getMovieById = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  const movie = await Movie.findById(id);
+
+  if (!movie) {
+    return res.status(404).json({ message: "Movie not found" });
+  }
+
+  res.status(200).json({ message: "Movie found", movie });
+});
