@@ -37,15 +37,9 @@ export async function getImdbTopMovies(req, res) {
 }
 
 export const searchMovies = asyncHandler(async (req, res) => {
-  const { searchTerm } = req.query;
+  const { searchTerm } = req.query || "";
 
-  console.log("Searching for movies with searchTerm:", searchTerm);
-
-  if (!searchTerm) {
-    return res
-      .status(400)
-      .json({ message: "Query parameter 'searchTerm' is required" });
-  }
+  console.log(searchTerm);
 
   try {
     const movies = await Movie.find({
@@ -55,9 +49,9 @@ export const searchMovies = asyncHandler(async (req, res) => {
       ],
     });
 
-    res.json(movies);
+    return res.json(movies); // Send the search result
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 });
 
