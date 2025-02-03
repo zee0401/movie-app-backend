@@ -37,7 +37,7 @@ export async function getImdbTopMovies(req, res) {
 }
 
 export const searchMovies = asyncHandler(async (req, res) => {
-  const { searchTerm = "", sortBy = "name", sortOrder = "asc" } = req.query;
+  const { searchTerm = "", sortBy = "rating" } = req.query;
 
   const sortFields = ["name", "rating", "releaseDate", "duration"];
 
@@ -45,7 +45,7 @@ export const searchMovies = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: "Invalid sort field" });
   }
 
-  const sortOption = { [sortBy]: sortOrder === "desc" ? -1 : 1 };
+  const sortOption = { [sortBy]: 1 };
 
   try {
     const movies = await Movie.find({
