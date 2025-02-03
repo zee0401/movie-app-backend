@@ -37,21 +37,27 @@ export async function getImdbTopMovies(req, res) {
 }
 
 export const searchMovies = asyncHandler(async (req, res) => {
-  const { searchTerm } = req.query || "";
+  const { searchTerm = "", sortBy = "name", sortOrder = "asc" } = req.query;
 
-  console.log(searchTerm);
+  const sortFields = ["name", "rating", "releaseDate", "duration"];
+
+  if (sortBy && !sortFields.includes(sortBy)) {
+    return res.status(400).json({ message: "Invalid sort field" });
+  }
+
+  const sortOption = { [sortBy]: sortOrder === "desc" ? -1 : 1 };
 
   try {
     const movies = await Movie.find({
       $or: [
-        { name: { $regex: searchTerm, $options: "i" } }, // Case-insensitive search in title
-        { description: { $regex: searchTerm, $options: "i" } }, // Case-insensitive search in description
+        { name: { $regex: searchTerm, $options: "i" } },
+        { description: { $regex: searchTerm, $options: "i" } },
       ],
-    });
+    }).sort(sortOption);
 
-    return res.json(movies); // Send the search result
+    res.json(movies);
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 });
 
