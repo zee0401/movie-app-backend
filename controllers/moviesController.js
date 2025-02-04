@@ -37,7 +37,7 @@ export async function getImdbTopMovies(req, res) {
 }
 
 export const searchMovies = asyncHandler(async (req, res) => {
-  const { searchTerm = "", sortBy = "rating" } = req.query;
+  const { searchTerm = "", sortBy = "" } = req.query;
 
   const sortFields = ["name", "rating", "releaseDate", "duration"];
 
