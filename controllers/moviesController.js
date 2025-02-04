@@ -45,7 +45,7 @@ export const searchMovies = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: "Invalid sort field" });
   }
 
-  const sortOption = { [sortBy]: 1 };
+  const sortOption = { [sortBy]: -1 };
 
   try {
     const movies = await Movie.find({
@@ -62,26 +62,21 @@ export const searchMovies = asyncHandler(async (req, res) => {
 });
 
 export const addMovie = asyncHandler(async (req, res) => {
-  const { name, description, rating, releaseDate, duration, imageUrl } =
-    req.body;
+  const { name, description, rating, releaseDate, duration, image } = req.body;
+
+  console.log(req.body);
 
   if (!name || !description || !rating || !releaseDate || !duration) {
     return res.status(400).json({ message: "Missing required fields" });
   }
-  const date = new Date(releaseDate);
-  const formattedDate = new Date(
-    date.getFullYear(),
-    date.getMonth(),
-    date.getDate()
-  );
 
   const movie = new Movie({
     name,
     description,
     rating: parseFloat(rating),
-    releaseDate: formattedDate,
-    duration: parseInt(duration, 10),
-    imageUrl: imageUrl || "",
+    releaseDate,
+    duration,
+    image: image || "",
   });
 
   try {
@@ -95,6 +90,8 @@ export const addMovie = asyncHandler(async (req, res) => {
 export const editMovie = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const updates = req.body;
+
+  console.log(req.params);
 
   const updatedMovie = await Movie.findByIdAndUpdate(id, updates, {
     new: true,

@@ -12,10 +12,10 @@ import asyncHandler from "../middleware/asyncHandler.js";
 const router = express.Router();
 
 router.get("/all-movies", getAllMovies);
-router.get("/singleMovie/:id", getMovieById);
+router.get("/single-movie/:id", getMovieById);
 router.get("/search", searchMovies);
-router.post("/create-movie", addMovie);
-router.put("/edit-movie", editMovie);
+router.post("/add-movie", addMovie);
+router.put("/update-movie/:id", editMovie);
 router.delete("/delete-movie", deleteMovie);
 
 export default router;
