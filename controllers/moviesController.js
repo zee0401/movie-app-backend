@@ -107,6 +107,8 @@ export const editMovie = asyncHandler(async (req, res) => {
 export const deleteMovie = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
+  console.log(id);
+
   const deletedMovie = await Movie.findByIdAndDelete(id);
 
   if (!deletedMovie) {
